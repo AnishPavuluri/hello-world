@@ -1,0 +1,33 @@
+<html>
+    <head>
+	<title>Inheritance</title>
+        <script>
+			class Animal { 
+			  constructor(name) {
+				this.name = name;
+			  }
+			  
+			  speak() {
+				console.log(this.name + ' makes a noise.');
+				alert("**** this is super class method ****"+this.name + ' makes a noise.');
+			  }
+			}
+
+			class Dog extends Animal {
+
+			   walk(){
+				 alert("sub class method");
+			   }	
+			  
+			}
+
+			var d = new Dog('Mitzie');
+			console.log(d instanceof Animal); // true
+			alert("d instanceof Animal: "+(d instanceof Animal)); // true
+			console.log(d instanceof Dog);   // true
+			alert("d instanceof Dog: "+(d instanceof Dog));   // true
+			d.speak(); // Mitzie makes a noise.
+		</script>
+    </head>
+	<body>Refresh the page, we will see result in alerts</body>
+</html>

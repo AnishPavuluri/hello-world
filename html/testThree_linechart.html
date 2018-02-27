@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+	Please select the file to prepare the line char::
+	<input type="file" id="file-input" />
+	<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+	<script>
+		var lineChartData;
+		var dps = [];
+		function readSingleFile(e) {
+			var file = e.target.files[0];
+			if (!file) {
+				return;
+			}
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				var contents = e.target.result;
+				lineChartData = contents.split("\n");
+				lineChartData.forEach( function(s) { 
+				var idData = s.split(";");
+					if(idData.length == 3 && idData[2].trim() == "yes") {
+						dps.push({
+							x: new Date(idData[0].trim()),
+							y: Number(idData[1].trim()) 
+						});
+					}
+				});
+				drawLineChart();
+			};
+			reader.readAsText(file);
+		}
+
+		function drawLineChart () {
+			var chart = new CanvasJS.Chart("chartContainer", {
+			title:{
+				text: "Line chart of selected deta file"
+			},
+			axisY:{
+				title: "Percentage",
+				lineColor: "#C24642",
+				tickColor: "#C24642",
+				labelFontColor: "#C24642",
+				titleFontColor: "#C24642"
+			},
+			
+			toolTip: {
+				shared: true
+			},
+			legend: {
+				cursor: "pointer",
+				itemclick: toggleDataSeries
+			},
+			data: [{
+				type: "line",
+				name: "Yes",
+				color: "#369EAD",
+				showInLegend: true,
+				axisYIndex: 1,
+				dataPoints: dps
+			}
+			]
+			});
+			chart.render();
+
+			function toggleDataSeries(e) {
+				if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				} else {
+					e.dataSeries.visible = true;
+				}
+				e.chart.render();
+			}
+		}
+		document.getElementById('file-input').addEventListener('change', readSingleFile, false);
+</script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>
